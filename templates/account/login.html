@@ -1,12 +1,9 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
     {% load crispy_forms_tags %}
+{% block content %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
+
+<div class="container">
 <h3>Login</h3>
 <form  method="post">
     {% csrf_token %}
@@ -34,6 +31,8 @@
   <button  type="submit">Login</button>
 
 </form>
-
-</body>
-</html>
+    <div class="d-flex flex-column">
+  <a class="m-auto" href="{% url 'password_reset' %}">Forgot password</a>
+</div>
+</div>
+{% endblock %}

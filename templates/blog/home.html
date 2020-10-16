@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+{% for i in blog %}
+
+        <h2>{{ i.title }}</h2>
+        <p> <a href="{{ i.get_absolute_url }}">{{ i.body }}</a></p>
+       {% comment %} <img src="{{i.image.url }}"> {% endcomment %}
+        <h6>{{ i.author }}</h6>
+        <hr>
+        <br>
+
+{% endfor %}
+</div>
+
+{% endblock  %}

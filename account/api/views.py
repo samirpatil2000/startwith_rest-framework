@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 
 from account.models import Account
 from account.api.serializer import RegistrationSerializer
-
+from rest_framework.authtoken.models import Token
 
 @api_view(['POST',])
 def registration_view(request):
@@ -19,6 +19,8 @@ def registration_view(request):
             data['response']='Successfully Register New User'
             data['email']=account.email
             data['username']=account.username
+            token=Token.objects.get(user=account).key
+            data['token']=token
 
 
         else:

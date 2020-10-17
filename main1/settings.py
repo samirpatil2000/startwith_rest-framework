@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'phonenumbers',
 
+    'rest_framework',
+
     #Apps
     'account',
     'blog',

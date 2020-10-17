@@ -23,6 +23,10 @@ urlpatterns = [
     path('', include('account.urls')),
     path('blog/', include('blog.urls')),
 
+    #REST FRAMEWORK
+    path('api/blog/', include('blog.api.urls')),
+
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

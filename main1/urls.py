@@ -25,6 +25,7 @@ urlpatterns = [
 
     #REST FRAMEWORK
     path('api/blog/', include('blog.api.urls')),
+    path('api/account/', include('account.api.urls')),
 
 
 ]

@@ -6,6 +6,9 @@ from account.models import Account
 from blog.models import BlogPost
 from blog.api.serializer import BlogPostSereliazer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView
+from rest_framework.authentication import TokenAuthentication
 
 @api_view(['GET',])
 @permission_classes([IsAuthenticated])
@@ -76,4 +79,9 @@ def blog_api_create(request,slug):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-
+class BlogApiListView(ListAPIView):
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostSereliazer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    pagination_class = PageNumberPagination

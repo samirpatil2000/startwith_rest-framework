@@ -1,13 +1,14 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 
 from account.models import Account
 from blog.models import BlogPost
 from blog.api.serializer import BlogPostSereliazer
-
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET',])
+@permission_classes([IsAuthenticated])
 def blog_api_detail(request,slug):
     try:
         blog_post=BlogPost.objects.get(slug=slug)
@@ -19,6 +20,7 @@ def blog_api_detail(request,slug):
         return Response(sereliazer.data)
 
 @api_view(['PUT',])
+@permission_classes([IsAuthenticated])
 def blog_api_update(request,slug):
     try:
         blog_post=BlogPost.objects.get(slug=slug)
@@ -27,6 +29,9 @@ def blog_api_update(request,slug):
     data={
 
     }
+    user=request.user
+    if blog_post.author != user:
+        return Response({'response':" You don't have permissions "})
     if request.method =='PUT':
         selerizer=BlogPostSereliazer(blog_post)
         if selerizer.is_valid():
@@ -36,6 +41,7 @@ def blog_api_update(request,slug):
         return Response(selerizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE',])
+@permission_classes([IsAuthenticated])
 def blog_api_delete(request,slug):
     try:
         blog_post=BlogPost.objects.get(slug=slug)
@@ -44,6 +50,8 @@ def blog_api_delete(request,slug):
     data={
 
     }
+    if blog_post.author != request.user:
+        return Response({'response':'You donot have permissions '})
     if request.method =='DELETE':
         operation=blog_post.delete()
         data={}
@@ -53,9 +61,10 @@ def blog_api_delete(request,slug):
         else:
             data['failure']='Delete Failed'
 
-@api_view(['POST'])
+@api_view(['POST',])
+@permission_classes([IsAuthenticated])
 def blog_api_create(request,slug):
-    account=Account.objects.get(pk=1)
+    account=request.user
 
     blog_post=BlogPost(author=account)
 

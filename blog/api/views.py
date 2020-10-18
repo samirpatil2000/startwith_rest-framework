@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.filters import SearchFilter,OrderingFilter
 
 @api_view(['GET',])
 @permission_classes([IsAuthenticated])
@@ -29,14 +30,12 @@ def blog_api_update(request,slug):
         blog_post=BlogPost.objects.get(slug=slug)
     except BlogPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    data={
-
-    }
     user=request.user
     if blog_post.author != user:
         return Response({'response':" You don't have permissions "})
     if request.method =='PUT':
         selerizer=BlogPostSereliazer(blog_post)
+        data = {}
         if selerizer.is_valid():
             selerizer.save()
             data['success']='Updated Successfully'
@@ -85,3 +84,5 @@ class BlogApiListView(ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     pagination_class = PageNumberPagination
+    filter_backends = SearchFilter,OrderingFilter
+    search_field=('title','body','author__username')
